@@ -1,5 +1,7 @@
 # OpenSSH-Server Docker Container
 
+![cover-image](./assets/docker-ssh-cover.png)
+
 A containerized OpenSSH server for **secure, temporary LAN file transfers** — without installing SSH on your host machine and without exposing shell access to your host OS.
 
 ---
