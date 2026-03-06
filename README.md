@@ -8,7 +8,7 @@ A containerized OpenSSH server for **secure, temporary LAN file transfers** — 
 
 The common scenario: you need to quickly share files with another machine on your LAN over a secure channel. Your options feel bad:
 
-- **Install `openssh-server` on bare metal** — now SSH is permanently running on your host, attacking your actual OS's attack surface.
+- **Install `openssh-server` on bare metal** — SSH is now permanently running on your host, expanding its attack surface.
 - **Use an unencrypted method** (HTTP, FTP, netcat) — works, but traffic is cleartext.
 - **Give someone SSH access** — now they have a shell into your real machine.
 
@@ -18,12 +18,21 @@ This project solves all three problems. It runs OpenSSH inside a Docker containe
 
 ## How It Works
 
-- The container runs `openssh-server` on Ubuntu Noble.
-- A dedicated low-privilege user is created inside the container.
+- The container runs `openssh-server` inside an isolated environment.
+- A dedicated low-privilege user is created inside the container at startup.
 - That user's home directory is bind-mounted to a folder on your host — the only path they can ever see.
-- Shell access is scoped entirely to the container environment, not your host.
-- Authentication is handled via credentials configured through environment variables.
+- Shell access is scoped entirely to the container; no access to host processes or files.
+- Authentication supports both password and public key, configured via environment variables.
 - The container exposes port `2222` on your LAN interface.
+
+---
+
+## Available Images
+
+| Tag | Base | Notes |
+|---|---|---|
+| `ubuntu-noble-1.0.0` | `ubuntu:noble` | Familiar tooling, bash shell |
+| `alpine-1.0.0` | `alpine:3.23.3` | Minimal footprint, recommended for most use cases |
 
 ---
 
@@ -38,8 +47,14 @@ This project solves all three problems. It runs OpenSSH inside a Docker containe
 
 ### 1. Pull the image
 
+Choose the tag that suits your needs:
+
 ```bash
-docker pull shobanchiddarth/openssh-server:1.0.0
+# Alpine (recommended — smaller image)
+docker pull shobanchiddarth/openssh-server:alpine-1.0.0
+
+# Ubuntu Noble
+docker pull shobanchiddarth/openssh-server:ubuntu-noble-1.0.0
 ```
 
 ### 2. Configure environment
@@ -66,7 +81,7 @@ docker run -d \
   -p 0.0.0.0:2222:22 \
   --env-file .env \
   -v /tmp/USERNAME-share:/home/USERNAME \
-  shobanchiddarth/openssh-server:1.0.0
+  shobanchiddarth/openssh-server:alpine-1.0.0   # or :ubuntu-noble-1.0.0
 ```
 
 **Volume mapping explained:**
@@ -98,8 +113,6 @@ Replace `USERNAME` with the username you configured in `.env` and `<server-ip>` 
 
 ## Stopping and Cleanup
 
-When you're done transferring:
-
 ```bash
 docker stop USERNAME-openssh-server
 docker rm USERNAME-openssh-server
@@ -116,6 +129,7 @@ SSH is now completely gone from the host. No lingering service, no open port.
 | Host OS filesystem | Inaccessible — container sees only the bind-mounted folder |
 | Shell access | Scoped to the container; no access to host processes or files |
 | Transport | Encrypted via SSH |
+| Authentication | Password + public key (both active) |
 | Persistence | Zero — stop the container and the attack surface disappears |
 | Host SSH daemon | Never installed or started |
 
