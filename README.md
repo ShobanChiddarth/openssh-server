@@ -6,6 +6,24 @@ A containerized OpenSSH server for **secure, temporary LAN file transfers** — 
 
 ---
 
+## Single run command
+
+```sh
+# interactive so that you can view host keys
+docker run -it --rm \
+    --name USERNAME-openssh-server \
+    -v /tmp/USERNAME-share:/home/USERNAME \
+    -p 0.0.0.0:2222:22 \
+    -e SSH_USER=USERNAME \
+    -e SSH_PASSWORD=PASSWORD \
+    -e SSH_PUBLIC_KEY="ssh-ed25519 pub-key comment" \
+    shobanchiddarth/openssh-server:alpine-1.0.0 /bin/sh
+    # or
+    shobanchiddarth/openssh-server:ubuntu-noble-1.0.0 /bin/bash
+```
+
+---
+
 ## Why This Exists
 
 The common scenario: you need to quickly share files with another machine on your LAN over a secure channel. Your options feel bad:
