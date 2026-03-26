@@ -19,7 +19,7 @@ docker run -it --rm \
     -e SSH_PUBLIC_KEY="ssh-ed25519 pub-key comment" \
     shobanchiddarth/openssh-server:alpine-1.0.3 /bin/sh
     # or
-    shobanchiddarth/openssh-server:ubuntu-noble-1.0.0 /bin/bash
+    shobanchiddarth/openssh-server:ubuntu-noble-1.0.2 /bin/bash
 ```
 
 ---
@@ -74,7 +74,7 @@ Choose the tag that suits your needs:
 docker pull shobanchiddarth/openssh-server:alpine-1.0.3
 
 # Ubuntu Noble
-docker pull shobanchiddarth/openssh-server:ubuntu-noble-1.0.0
+docker pull shobanchiddarth/openssh-server:ubuntu-noble-1.0.2
 ```
 
 ### 2. Configure environment
@@ -116,7 +116,7 @@ docker run -it --rm \
     -e SSH_USER=USERNAME \
     -e SSH_PASSWORD=PASSWORD \
     -e SSH_PUBLIC_KEY="ssh-ed25519 pub-key comment" \
-    shobanchiddarth/openssh-server:ubuntu-noble-1.0.0 /bin/bash
+    shobanchiddarth/openssh-server:ubuntu-noble-1.0.2 /bin/bash
 ```
 
 **Volume mapping explained:**
