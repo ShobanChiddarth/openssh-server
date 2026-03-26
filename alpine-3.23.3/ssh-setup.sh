@@ -24,4 +24,9 @@ chown -R "$SSH_USER:$SSH_USER" "$USER_HOME"
 
 ssh-keygen -A
 
-exec /usr/sbin/sshd -D
+if [ $# -gt 0 ]; then
+    /usr/sbin/sshd
+    exec "$@"
+else
+    exec /usr/sbin/sshd -D
+fi
