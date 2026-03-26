@@ -22,4 +22,9 @@ chmod 700 "$USER_HOME/.ssh"
 chmod 600 "$USER_HOME/.ssh/authorized_keys"
 chown -R "$SSH_USER:$SSH_USER" "$USER_HOME"
 
-exec /usr/sbin/sshd -D
+if [ $# -gt 0 ]; then
+    /usr/sbin/sshd
+    exec "$@"
+else
+    exec /usr/sbin/sshd -D
+fi
